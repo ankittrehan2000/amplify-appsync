@@ -1,0 +1,347 @@
+type Post {
+  id: ID!
+  reactions(filter: ModelReactionFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelReactionConnection
+  numReactions: Int
+  comments(filter: ModelCommentFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelCommentConnection
+  userId: ID!
+  imageURL: String
+  createdAt: AWSDateTime!
+  description: String
+  updatedAt: AWSDateTime!
+}
+
+type Reaction {
+  id: ID!
+  commentId: ID!
+  userId: ID!
+  reactionType: Int
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  posts(filter: ModelPostFilterInput, sortDirection: ModelSortDirection, limit: Int, nextToken: String): ModelPostConnection
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Comment {
+  id: ID!
+  text: String!
+  postId: ID!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+enum ModelSortDirection {
+  ASC
+  DESC
+}
+
+type ModelPostConnection {
+  items: [Post]
+  nextToken: String
+}
+
+input ModelStringInput {
+  ne: String
+  eq: String
+  le: String
+  lt: String
+  ge: String
+  gt: String
+  contains: String
+  notContains: String
+  between: [String]
+  beginsWith: String
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIDInput {
+  ne: ID
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  contains: ID
+  notContains: ID
+  between: [ID]
+  beginsWith: ID
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+  size: ModelSizeInput
+}
+
+input ModelIntInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelFloatInput {
+  ne: Float
+  eq: Float
+  le: Float
+  lt: Float
+  ge: Float
+  gt: Float
+  between: [Float]
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelBooleanInput {
+  ne: Boolean
+  eq: Boolean
+  attributeExists: Boolean
+  attributeType: ModelAttributeTypes
+}
+
+input ModelSizeInput {
+  ne: Int
+  eq: Int
+  le: Int
+  lt: Int
+  ge: Int
+  gt: Int
+  between: [Int]
+}
+
+input ModelPostFilterInput {
+  id: ModelIDInput
+  numReactions: ModelIntInput
+  userId: ModelIDInput
+  imageURL: ModelStringInput
+  createdAt: ModelStringInput
+  description: ModelStringInput
+  and: [ModelPostFilterInput]
+  or: [ModelPostFilterInput]
+  not: ModelPostFilterInput
+}
+
+enum ModelAttributeTypes {
+  binary
+  binarySet
+  bool
+  list
+  map
+  number
+  numberSet
+  string
+  stringSet
+  _null
+}
+
+type Query {
+  getPost(id: ID!): Post
+  listPosts(filter: ModelPostFilterInput, limit: Int, nextToken: String): ModelPostConnection
+  getReaction(id: ID!): Reaction
+  listReactions(filter: ModelReactionFilterInput, limit: Int, nextToken: String): ModelReactionConnection
+  getUser(id: ID!): User
+  listUsers(filter: ModelUserFilterInput, limit: Int, nextToken: String): ModelUserConnection
+  getComment(id: ID!): Comment
+  listComments(filter: ModelCommentFilterInput, limit: Int, nextToken: String): ModelCommentConnection
+}
+
+input CreatePostInput {
+  id: ID
+  numReactions: Int
+  userId: ID!
+  imageURL: String
+  createdAt: AWSDateTime
+  description: String
+}
+
+input UpdatePostInput {
+  id: ID!
+  numReactions: Int
+  userId: ID
+  imageURL: String
+  createdAt: AWSDateTime
+  description: String
+}
+
+input DeletePostInput {
+  id: ID!
+}
+
+type Mutation {
+  createPost(input: CreatePostInput!, condition: ModelPostConditionInput): Post
+  updatePost(input: UpdatePostInput!, condition: ModelPostConditionInput): Post
+  deletePost(input: DeletePostInput!, condition: ModelPostConditionInput): Post
+  createReaction(input: CreateReactionInput!, condition: ModelReactionConditionInput): Reaction
+  updateReaction(input: UpdateReactionInput!, condition: ModelReactionConditionInput): Reaction
+  deleteReaction(input: DeleteReactionInput!, condition: ModelReactionConditionInput): Reaction
+  createUser(input: CreateUserInput!, condition: ModelUserConditionInput): User
+  updateUser(input: UpdateUserInput!, condition: ModelUserConditionInput): User
+  deleteUser(input: DeleteUserInput!, condition: ModelUserConditionInput): User
+  createComment(input: CreateCommentInput!, condition: ModelCommentConditionInput): Comment
+  updateComment(input: UpdateCommentInput!, condition: ModelCommentConditionInput): Comment
+  deleteComment(input: DeleteCommentInput!, condition: ModelCommentConditionInput): Comment
+}
+
+input ModelPostConditionInput {
+  numReactions: ModelIntInput
+  userId: ModelIDInput
+  imageURL: ModelStringInput
+  createdAt: ModelStringInput
+  description: ModelStringInput
+  and: [ModelPostConditionInput]
+  or: [ModelPostConditionInput]
+  not: ModelPostConditionInput
+}
+
+type Subscription {
+  onCreatePost: Post @aws_subscribe(mutations: ["createPost"])
+  onUpdatePost: Post @aws_subscribe(mutations: ["updatePost"])
+  onDeletePost: Post @aws_subscribe(mutations: ["deletePost"])
+  onCreateReaction: Reaction @aws_subscribe(mutations: ["createReaction"])
+  onUpdateReaction: Reaction @aws_subscribe(mutations: ["updateReaction"])
+  onDeleteReaction: Reaction @aws_subscribe(mutations: ["deleteReaction"])
+  onCreateUser: User @aws_subscribe(mutations: ["createUser"])
+  onUpdateUser: User @aws_subscribe(mutations: ["updateUser"])
+  onDeleteUser: User @aws_subscribe(mutations: ["deleteUser"])
+  onCreateComment: Comment @aws_subscribe(mutations: ["createComment"])
+  onUpdateComment: Comment @aws_subscribe(mutations: ["updateComment"])
+  onDeleteComment: Comment @aws_subscribe(mutations: ["deleteComment"])
+}
+
+type ModelReactionConnection {
+  items: [Reaction]
+  nextToken: String
+}
+
+input ModelReactionFilterInput {
+  id: ModelIDInput
+  commentId: ModelIDInput
+  userId: ModelIDInput
+  reactionType: ModelIntInput
+  and: [ModelReactionFilterInput]
+  or: [ModelReactionFilterInput]
+  not: ModelReactionFilterInput
+}
+
+input CreateReactionInput {
+  id: ID
+  commentId: ID!
+  userId: ID!
+  reactionType: Int
+}
+
+input UpdateReactionInput {
+  id: ID!
+  commentId: ID
+  userId: ID
+  reactionType: Int
+}
+
+input DeleteReactionInput {
+  id: ID!
+}
+
+input ModelReactionConditionInput {
+  commentId: ModelIDInput
+  userId: ModelIDInput
+  reactionType: ModelIntInput
+  and: [ModelReactionConditionInput]
+  or: [ModelReactionConditionInput]
+  not: ModelReactionConditionInput
+}
+
+type ModelUserConnection {
+  items: [User]
+  nextToken: String
+}
+
+input ModelUserFilterInput {
+  id: ModelIDInput
+  name: ModelStringInput
+  email: ModelStringInput
+  and: [ModelUserFilterInput]
+  or: [ModelUserFilterInput]
+  not: ModelUserFilterInput
+}
+
+input CreateUserInput {
+  id: ID
+  name: String!
+  email: String!
+}
+
+input UpdateUserInput {
+  id: ID!
+  name: String
+  email: String
+}
+
+input DeleteUserInput {
+  id: ID!
+}
+
+input ModelUserConditionInput {
+  name: ModelStringInput
+  email: ModelStringInput
+  and: [ModelUserConditionInput]
+  or: [ModelUserConditionInput]
+  not: ModelUserConditionInput
+}
+
+type ModelCommentConnection {
+  items: [Comment]
+  nextToken: String
+}
+
+input ModelCommentFilterInput {
+  id: ModelIDInput
+  text: ModelStringInput
+  postId: ModelIDInput
+  and: [ModelCommentFilterInput]
+  or: [ModelCommentFilterInput]
+  not: ModelCommentFilterInput
+}
+
+input CreateCommentInput {
+  id: ID
+  text: String!
+  postId: ID!
+}
+
+input UpdateCommentInput {
+  id: ID!
+  text: String
+  postId: ID
+}
+
+input DeleteCommentInput {
+  id: ID!
+}
+
+input ModelCommentConditionInput {
+  text: ModelStringInput
+  postId: ModelIDInput
+  and: [ModelCommentConditionInput]
+  or: [ModelCommentConditionInput]
+  not: ModelCommentConditionInput
+}
+
+input ModelIDKeyConditionInput {
+  eq: ID
+  le: ID
+  lt: ID
+  ge: ID
+  gt: ID
+  between: [ID]
+  beginsWith: ID
+}

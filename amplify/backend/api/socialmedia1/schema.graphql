@@ -1,0 +1,30 @@
+type Post @model @key(name: "userPosts", fields: ["userId"]) {
+  id: ID!
+  reactions: [Reaction] @connection(keyName: "postReaction", fields: ["id", "userId"])
+  numReactions: Int
+  comments: [Comment] @connection(keyName: "postComments", fields: ["id"])
+  userId: ID!
+  imageURL: String
+  createdAt: AWSDateTime!
+  description: String
+}
+
+type Reaction @model @key(name: "postReaction", fields: ["commentId", "userId"]) {
+  id: ID!
+  commentId: ID!
+  userId: ID!
+  reactionType: Int
+}
+
+type User @model {
+  id: ID!
+  name: String!
+  email: String!
+  posts: [Post] @connection(keyName: "userPosts", fields: ["id"])
+}
+
+type Comment @model @key(name: "postComments", fields: ["postId"]) {
+  id: ID!
+  text: String!
+  postId: ID!
+}
