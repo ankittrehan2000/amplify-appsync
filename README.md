@@ -1,4 +1,4 @@
-# amplify-appsync
+# amplify-appsync-dynamodb
 A sample backend application made from the Amplify CLI and AppSync as the Api for a social media app.
 
 This sample uses amplify directives `@key`, `@model` and `@connection` to form a relationship between all of the objects. 
