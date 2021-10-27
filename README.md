@@ -7,3 +7,4 @@ The `.vtl` files show auto-generated resolvers from Amplify for the GraphQl sche
 ## Sample queries and mutations
 
 <img src="https://github.com/ankittrehan2000/amplify-appsync/blob/main/demo.png" width="700" />
+ 
